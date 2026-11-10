@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/img/프로필.png">
+    <meta name="theme-color" content="#111111">
+    <title>플러그인 - 흑룡 BLACKDRAGON</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: #111111;
+            color: #e5e5e5;
+            font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* GNB Header */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            height: 70px;
+            border-bottom: 1px solid #30264a;
+            background: rgba(17, 17, 17, 0.96);
+            backdrop-filter: blur(12px);
+        }
+
+        .site-header-inner {
+            display: flex;
+            width: min(1240px, calc(100% - 64px));
+            height: 100%;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 auto;
+        }
+
+        .site-brand {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            text-decoration: none;
+            transition: color 150ms ease;
+        }
+
+        .back-link {
+            color: #c4b5fd;
+            font-size: 13px;
+            font-weight: 650;
+            text-decoration: none;
+            transition: color 150ms ease;
+        }
+
+        .site-nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            color: #c4c4cc;
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .site-nav a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 150ms ease;
+        }
+
+        .site-nav a:hover,
+        .site-nav a:focus-visible {
+            color: #c4b5fd;
+        }
+
+        .site-brand:hover,
+        .back-link:hover,
+        .site-brand:focus-visible,
+        .back-link:focus-visible,
+        .site-nav a:focus-visible {
+            color: #c4b5fd;
+        }
+
+        @media (max-width: 700px) {
+            .site-nav {
+                gap: 14px;
+                font-size: 12px;
+            }
+        }
+
+        .footer-link {
+            display: block;
+            margin-top: 10px;
+            color: #9ca3af;
+            font-size: 13px;
+            text-decoration: none;
+            transition: color 150ms ease;
+        }
+
+        .footer-link:hover,
+        .footer-link:focus-visible {
+            color: #c4b5fd;
+        }
+
+        .footer-link:focus-visible {
+            outline: 2px solid #c4b5fd;
+            outline-offset: 3px;
+        }
+
+        /* Page Layout */
+        .page-layout {
+            width: min(100% - 64px, 920px);
+            margin: 0 auto;
+            padding: 56px 0;
+        }
+
+        .page-heading {
+            margin-bottom: 36px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            margin: 0 0 10px;
+            color: #c4b5fd;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: clamp(32px, 5vw, 46px);
+            letter-spacing: -1.5px;
+        }
+
+        .page-description {
+            margin: 12px 0 0;
+            color: #9ca3af;
+        }
+
+        /* Product Grid System */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 22px;
+            border: 1px solid #30264a;
+            border-radius: 16px;
+            background:
+                radial-gradient(ellipse at 82% 25%, rgba(91, 63, 181, 0.14), transparent 44%),
+                linear-gradient(145deg, #17151d 0%, #111111 72%);
+        }
+
+        .product-card.is-disabled {
+            opacity: 0.6;
+        }
+
+        .product-preview {
+            overflow: hidden;
+            border: 1px solid #30264a;
+            border-radius: 12px;
+            background: #111111;
+        }
+
+        .product-preview.is-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 16 / 9;
+            background: #1a1a1a;
+            color: #77727f;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .product-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            background: #111111;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-info h2 {
+            margin: 0 0 10px;
+            color: #ffffff;
+            font-size: clamp(18px, 2.2vw, 22px);
+            letter-spacing: -0.8px;
+        }
+
+        .product-description {
+            min-height: 48px;
+            margin: 0 0 14px;
+            color: #c4c4cc;
+            font-size: 14px;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-top: auto;
+            margin-bottom: 16px;
+        }
+
+        .product-price strong {
+            color: #ffffff;
+            font-size: 24px;
+            letter-spacing: -1px;
+        }
+
+        .product-price span {
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        /* Purchase Button */
+        .purchase-button {
+            display: inline-flex;
+            min-height: 46px;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 24px;
+            border: 1px solid #5b3fb5;
+            border-radius: 999px;
+            background: #8b5cf6;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 750;
+            text-decoration: none;
+            transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+        }
+
+        .purchase-button:hover:not(.is-disabled),
+        .purchase-button:focus-visible:not(.is-disabled) {
+            transform: translateY(-2px);
+            background: #7c3aed;
+            box-shadow: 0 8px 22px rgba(139, 92, 246, 0.24);
+        }
+
+        .purchase-button.is-disabled {
+            border-color: #30264a;
+            background: #211b30;
+            color: #6b7280;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Focus Outline Accessibility */
+        .purchase-button:focus-visible,
+        .site-brand:focus-visible,
+        .back-link:focus-visible {
+            outline: 2px solid #c4b5fd;
+            outline-offset: 3px;
+        }
+
+        button.purchase-button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* Purchase Site Dialog */
+        #purchase-site-dialog {
+            width: min(420px, calc(100% - 32px));
+            padding: 24px;
+            border: 1px solid #41315e;
+            border-radius: 16px;
+            background: #17151d;
+            color: #e5e5e5;
+        }
+
+        #purchase-site-dialog::backdrop {
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(4px);
+        }
+
+        .purchase-dialog-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .purchase-dialog-header h2 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 21px;
+        }
+
+        .purchase-dialog-header p {
+            margin: 5px 0 0;
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        .purchase-dialog-close {
+            flex: 0 0 auto;
+            width: 34px;
+            height: 34px;
+            border: 1px solid #41315e;
+            border-radius: 8px;
+            background: #211b30;
+            color: #e5e5e5;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .purchase-dialog-options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .purchase-dialog-options a {
+            display: block;
+            padding: 14px 16px;
+            border: 1px solid #41315e;
+            border-radius: 10px;
+            background: #211b30;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .purchase-dialog-options a:hover,
+        .purchase-dialog-options a:focus-visible {
+            border-color: #8b5cf6;
+            background: #2b2140;
+        }
+
+        .purchase-dialog-options a span {
+            display: block;
+            margin-top: 3px;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        #purchase-site-dialog button:focus-visible,
+        .purchase-dialog-options a:focus-visible {
+            outline: 2px solid #c4b5fd;
+            outline-offset: 3px;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 700px) {
+            .site-header {
+                height: 67px;
+            }
+
+            .site-header-inner {
+                width: calc(100% - 36px);
+            }
+
+            .page-layout {
+                width: calc(100% - 36px);
+                padding: 40px 0;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 14px;
+            }
+
+            .product-card {
+                gap: 14px;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .product-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .product-card {
+                padding: 16px;
+            }
+
+            .purchase-button {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .purchase-button {
+                transition: none;
+            }
+
+            .purchase-button:hover,
+            .purchase-button:focus-visible {
+                transform: none;
+            }
+        }
+        #lang-dialog[open] {
+            animation: lang-pop 220ms ease;
+        }
+
+        button[aria-controls="lang-dialog"] {
+            transition: color 180ms ease, border-color 180ms ease, transform 180ms ease;
+        }
+
+        button[aria-controls="lang-dialog"]:hover,
+        button[aria-controls="lang-dialog"]:focus-visible {
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+            transform: translateY(-2px) scale(1.06);
+        }
+
+        #lang-dialog a {
+            transition: transform 180ms ease, border-color 180ms ease;
+        }
+
+        #lang-dialog a:hover,
+        #lang-dialog a:focus-visible {
+            border-color: #ffffff !important;
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            button[aria-controls="lang-dialog"]:hover,
+            button[aria-controls="lang-dialog"]:focus-visible,
+            #lang-dialog a:hover,
+            #lang-dialog a:focus-visible {
+                transform: none;
+            }
+        }
+
+        @keyframes lang-pop {
+            from {
+                opacity: 0;
+                transform: scale(0.92) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* ---- 언어 선택 버튼 애니메이션 ---- */
+        #lang-dialog [data-lang-btn] {
+            position: relative;
+            transition:
+                background-color 200ms ease,
+                border-color 200ms ease,
+                color 200ms ease,
+                transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 200ms ease;
+            opacity: 0;
+            animation: lang-btn-in 380ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        /* 순차 등장 (stagger) */
+        #lang-dialog [data-lang-btn]:nth-child(1) { animation-delay: 60ms; }
+        #lang-dialog [data-lang-btn]:nth-child(2) { animation-delay: 130ms; }
+        #lang-dialog [data-lang-btn]:nth-child(3) { animation-delay: 200ms; }
+
+        #lang-dialog [data-lang-btn]:hover,
+        #lang-dialog [data-lang-btn]:focus-visible {
+            background-color: #2b2140 !important;
+            border-color: #8b5cf6 !important;
+            color: #ffffff !important;
+            transform: translateX(4px) scale(1.02);
+            box-shadow: 0 8px 22px rgba(139, 92, 246, 0.35);
+            outline: none;
+        }
+
+        /* 왼쪽 포인트 바 */
+        #lang-dialog [data-lang-btn]::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 3px;
+            height: 0;
+            border-radius: 0 3px 3px 0;
+            background: #8b5cf6;
+            transform: translateY(-50%);
+            transition: height 220ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        #lang-dialog [data-lang-btn]:hover::before,
+        #lang-dialog [data-lang-btn]:focus-visible::before {
+            height: 60%;
+        }
+
+        /* 눌림 피드백 */
+        #lang-dialog [data-lang-btn]:active {
+            transform: translateX(4px) scale(0.98);
+            box-shadow: 0 3px 10px rgba(139, 92, 246, 0.3);
+        }
+
+        #lang-dialog [data-lang-btn]:focus-visible {
+            outline: 2px solid #c4b5fd;
+            outline-offset: 2px;
+        }
+
+        /* 현재 선택된 언어 강조 */
+        #lang-dialog [data-lang-btn][aria-current="true"] {
+            background-color: #2b2140 !important;
+            border-color: #8b5cf6 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.35);
+        }
+
+        #lang-dialog [data-lang-btn][aria-current="true"]::before {
+            height: 60%;
+        }
+
+        /* 트리거 버튼 (Language) */
+        button[aria-controls="lang-dialog"]:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        @keyframes lang-btn-in {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #lang-dialog [data-lang-btn] {
+                animation: none;
+                opacity: 1;
+            }
+
+            #lang-dialog [data-lang-btn]:hover,
+            #lang-dialog [data-lang-btn]:focus-visible,
+            #lang-dialog [data-lang-btn]:active,
+            button[aria-controls="lang-dialog"]:active {
+                transform: none;
+            }
+
+            #lang-dialog [data-lang-btn]::before {
+                transition: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #lang-dialog[open] {
+                animation: none;
+            }
+        }
+        /* ===== 라이트 테마 ===== */
+        body[data-theme="light"] { background: #ffffff; color: #111111; }
+        body[data-theme="light"] .site-header { background: rgba(255,255,255,0.96); border-bottom-color: #e5e7eb; }
+        body[data-theme="light"] .site-brand, body[data-theme="light"] .site-nav a { color: #111111; }
+        body[data-theme="light"] .page-layout { color: #111111; background: #ffffff; }
+        body[data-theme="light"] .page-heading h1, body[data-theme="light"] .page-heading p { color: #111111; }
+        body[data-theme="light"] .eyebrow { color: #6d28d9; }
+        body[data-theme="light"] .product-card { background: #ffffff; border-color: #e2e8f0; color: #111111; }
+        body[data-theme="light"] .product-card h3, body[data-theme="light"] .product-card p { color: #111111; }
+        body[data-theme="light"] .product-card h2 { color: #111111 !important; }
+        body[data-theme="light"] .product-description { color: #475569 !important; }
+        body[data-theme="light"] .product-price strong { color: #111111 !important; }
+        body[data-theme="light"] .product-price span { color: #475569 !important; }
+        body[data-theme="light"] .purchase-button { background: #5b3fb5 !important; color: #ffffff !important; border-color: #5b3fb5 !important; }
+        body[data-theme="light"] .product-card .price, body[data-theme="light"] .product-card .desc { color: #475569; }
+        body[data-theme="light"] .footer-link { color: #475569; }
+        /* 화이트 테마 전역: 흰색 글자 → 검은색 */
+        body[data-theme="light"] h1, body[data-theme="light"] h2, body[data-theme="light"] h3, body[data-theme="light"] h4,
+        body[data-theme="light"] p, body[data-theme="light"] li, body[data-theme="light"] .site-brand, body[data-theme="light"] .site-nav a,
+        body[data-theme="light"] .page-heading h1, body[data-theme="light"] .product-card h3, body[data-theme="light"] .product-card p {
+            color: #111111 !important;
+        }
+        body[data-theme="light"] [style*="color:#ffffff"], body[data-theme="light"] [style*="color:#fff"], body[data-theme="light"] [style*="color:#e5e5e5"] {
+            color: #111111 !important;
+        }
+        body[data-theme="light"] a[class*="button"], body[data-theme="light"] .btn { color: #ffffff !important; }
+        body[data-theme="light"] .product-card .price, body[data-theme="light"] .product-card .desc { color: #475569 !important; }
+        /* 요청 버튼 등: 흰 글자 → 검정 (라이트 배경에서 보이게) */
+        body[data-theme="light"] button { color: #111111 !important; }
+        body[data-theme="light"] a[class*="button"], body[data-theme="light"] .btn, body[data-theme="light"] .purchase-button { color: #ffffff !important; }
+        body[data-theme="light"] a[class*="button"], body[data-theme="light"] .btn { background: #5b3fb5; color: #ffffff; border-color: #5b3fb5; }
+        body[data-theme="light"] button[aria-controls="lang-dialog"] { background: #ffffff !important; color: #4c1d95 !important; border-color: #d1d5db !important; }
+        body[data-theme="light"] #lang-dialog { background: #ffffff; color: #111111; border-color: #e5e7eb; }
+        /* 언어 다이얼로그: 인라인 어두운 배경을 흰 배경 + 검정 글자로 강제 대체 */
+        body[data-theme="light"] #lang-dialog { background: #ffffff !important; color: #111111 !important; border-color: #e5e7eb !important; }
+        body[data-theme="light"] #lang-dialog h2, body[data-theme="light"] #lang-dialog p { background: transparent !important; color: #111111 !important; }
+        body[data-theme="light"] #lang-dialog p[style*="color:#9ca3af"] { color: #475569 !important; }
+        body[data-theme="light"] #lang-dialog [data-lang-btn] { background: #ffffff !important; color: #111111 !important; border-color: #d1d5db !important; }
+        body[data-theme="light"] #lang-dialog [data-lang-btn][aria-current="true"],
+        body[data-theme="light"] #lang-dialog [data-lang-btn][data-active="true"] { background: #5b3fb5 !important; color: #ffffff !important; border-color: #5b3fb5 !important; }
+        body[data-theme="light"] #lang-dialog button[onclick*="close"] { background: #ffffff !important; color: #111111 !important; border-color: #d1d5db !important; }
+        body[data-theme="light"] #lang-dialog h2, body[data-theme="light"] #lang-dialog p, body[data-theme="light"] #lang-dialog button { color: #111111; background: #ffffff; border-color: #d1d5db; }
+        /* 푸터 회색 글자 → 진한 회색, 브랜드 텍스트 → 진보라 */
+        body[data-theme="light"] footer [style*="color:#9ca3af"] { color: #475569 !important; }
+        body[data-theme="light"] footer span[style*="color:#a78bfa"] { color: #6d28d9 !important; }
+        /* 푸터 링크 호버: 블랙 모드처럼 보라색으로 */
+        body[data-theme="light"] .footer-link:hover,
+        body[data-theme="light"] .footer-link:focus-visible {
+            color: #7c3aed !important;
+        }
+        /* 상단 내비 링크 호버도 보라색으로 */
+        body[data-theme="light"] .site-nav a:hover,
+        body[data-theme="light"] .site-nav a:focus-visible {
+            color: #7c3aed !important;
+        }
+        /* 우측 하단 고정 버튼: 보라 배경에는 흰 글자 유지 */
+        body[data-theme="light"] a[style*="background:#8b5cf6"] { color: #ffffff !important; }
+        .theme-toggle-btn { position: relative; flex: 0 0 auto; width: 64px; height: 32px; padding: 0; border-radius: 999px; border: 1px solid #41315e; background: #2b2b2e; cursor: pointer; font-family: inherit; transition: background 0.25s ease; }
+        body[data-theme="light"] .theme-toggle-btn { background: #e5e7eb; border-color: #d1d5db; }
+        .theme-toggle-btn .theme-icon { position: absolute; top: 50%; transform: translateY(-50%); font-size: 13px; line-height: 1; pointer-events: none; }
+        .theme-toggle-btn .theme-icon-sun { left: 9px; color: #fbbf24; opacity: 0; transition: opacity 0.2s ease; }
+        .theme-toggle-btn .theme-icon-moon { right: 8px; color: #e0e7ff; transition: opacity 0.2s ease; }
+        body[data-theme="light"] .theme-toggle-btn .theme-icon-sun { opacity: 1; }
+        body[data-theme="light"] .theme-toggle-btn .theme-icon-moon { opacity: 0; }
+        .theme-toggle-btn .theme-knob { position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #f8fafc; box-shadow: 0 1px 4px rgba(0,0,0,0.35); transition: transform 0.25s ease, background 0.25s ease; pointer-events: none; }
+        body[data-theme="light"] .theme-toggle-btn .theme-knob { transform: translateX(32px); background: #111111; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a class="site-brand" href="/"><span data-i18n-b="1">BLACKDRAGON</span></a>
+            <nav class="site-nav" aria-label="주요 메뉴">
+                <a href="/#intro-title">소개</a>
+                <a href="/#portfolio-work">작업물</a>
+                <a href="/index2">편집소스</a>
+                <button type="button" aria-haspopup="dialog" aria-controls="lang-dialog" onclick="document.getElementById('lang-dialog').showModal()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid #41315e;border-radius:8px;background:#1a1a1a;color:#c4b5fd;font-size:12px;font-weight:650;cursor:pointer;font-family:inherit;">언어</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-layout">
+        <section class="page-heading" aria-labelledby="page-title">
+            <p class="eyebrow">PLUGINS &amp; SCRIPTS</p>
+            <h1 id="page-title">플러그인 및 스크립트 구매하기</h1>
+            <p class="page-description">직접 제작한 플러그인 및 스크립트를 만나보세요.</p>
+        </section>
+
+        <!-- 플러그인 목록 그리드 -->
+        <section class="product-grid" aria-label="판매 중인 플러그인">
+            <!-- 1. 활성화된 플러그인 카드 -->
+            <article class="product-card">
+                <div class="product-preview">
+                    <img class="product-image" src="https://cdn.buymeacoffee.com/uploads/rewards/2026-10-07/1/155936_SHANA20261008_005303.gif" alt="Bulk MOGRT importer 상품 이미지" width="480" height="270" fetchpriority="high">
+                </div>
+                <div class="product-info">
+                    <h2>Bulk MOGRT importer</h2>
+                    <p class="product-description">Adobe Premiere Pro에서 여러 개의 MOGRT 파일을 한 번에 불러올 수 있습니다.</p>
+                    <div class="product-price"><strong>3,000원 (USD $3)</strong><span>1회 구매</span></div>
+                    <button class="purchase-button" type="button" aria-haspopup="dialog" aria-controls="purchase-site-dialog" onclick="openPurchaseDialog('bulkMogrt')">구매 사이트 선택 <span aria-hidden="true">↗</span></button>
+                </div>
+            </article>
+
+            <!-- 2. Simple Graph -->
+            <article class="product-card">
+                <div class="product-preview"><img class="product-image" src="https://cdn.buymeacoffee.com/uploads/rewards/2026-11-06/1/162342__20261107_012035.png@1200w_0e.png" alt="Simple Graph 플러그인 미리보기" width="626" height="500" loading="lazy" style="object-fit:contain;"></div>
+                <div class="product-info">
+                    <h2>Simple Graph</h2>
+                    <p class="product-description">키프레임 그래프를 간편하게 조절하고, 직접 만든 그래프를 프리셋으로 저장할 수 있습니다.</p>
+                    <div class="product-price"><strong>6,000원 (USD $6)</strong><span>1회 구매</span></div>
+                    <button class="purchase-button" type="button" aria-haspopup="dialog" aria-controls="purchase-site-dialog" onclick="openPurchaseDialog('simpleGraph')">구매 사이트 선택 ↗</button>
+                </div>
+            </article>
+
+            <!-- 3. 준비중 카드 -->
+            <article class="product-card is-disabled">
+                <div class="product-preview is-placeholder">준비중</div>
+                <div class="product-info">
+                    <h2>준비중</h2>
+                    <p class="product-description">새로운 플러그인을 준비하고 있습니다.</p>
+                    <div class="product-price"><strong>준비중</strong></div>
+                    <a class="purchase-button is-disabled" href="#" aria-disabled="true" tabindex="-1">준비중</a>
+                </div>
+            </article>
+
+            <!-- 4. 준비중 카드 -->
+            <article class="product-card is-disabled">
+                <div class="product-preview is-placeholder">준비중</div>
+                <div class="product-info">
+                    <h2>준비중</h2>
+                    <p class="product-description">새로운 플러그인을 준비하고 있습니다.</p>
+                    <div class="product-price"><strong>준비중</strong></div>
+                    <a class="purchase-button is-disabled" href="#" aria-disabled="true" tabindex="-1">준비중</a>
+                </div>
+            </article>
+
+            <!-- 5. 준비중 카드 -->
+            <article class="product-card is-disabled">
+                <div class="product-preview is-placeholder">준비중</div>
+                <div class="product-info">
+                    <h2>준비중</h2>
+                    <p class="product-description">새로운 플러그인을 준비하고 있습니다.</p>
+                    <div class="product-price"><strong>준비중</strong></div>
+                    <a class="purchase-button is-disabled" href="#" aria-disabled="true" tabindex="-1">준비중</a>
+                </div>
+            </article>
+
+            <!-- 6. 준비중 카드 -->
+            <article class="product-card is-disabled">
+                <div class="product-preview is-placeholder">준비중</div>
+                <div class="product-info">
+                    <h2>준비중</h2>
+                    <p class="product-description">새로운 플러그인을 준비하고 있습니다.</p>
+                    <div class="product-price"><strong>준비중</strong></div>
+                    <a class="purchase-button is-disabled" href="#" aria-disabled="true" tabindex="-1">준비중</a>
+                </div>
+            </article>
+        </section>
+
+        <!-- 하단 푸터 -->
+        <footer style="margin:40px 0 0;padding:44px 0 26px;border-top:1px solid #30264a;box-sizing:border-box;">
+            <div style="display:flex;flex-wrap:wrap;gap:36px 48px;justify-content:space-between;">
+                <div style="flex:1 1 260px;min-width:0;">
+                    <a href="/" style="color:#ffffff;font-size:20px;font-weight:800;letter-spacing:-0.04em;text-decoration:none;"><span style="color:#a78bfa;" data-i18n-b="1">BLACKDRAGON</span></a>
+                    <p style="margin:12px 0 0;color:#9ca3af;font-size:13px;line-height:1.8;">영상 편집 및 모션그래픽 제작자<br>게임, 저챗, 쇼츠, PV 등 다양한 장르의 영상을 제작하고 있습니다.</p>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:32px 56px;">
+                    <nav aria-label="메뉴 바로가기">
+                        <h3 style="margin:0 0 4px 0;color:#ffffff;font-size:13px;font-weight:800;">메뉴</h3>
+                        <a class="footer-link" href="/#intro-title">소개</a>
+                        <a class="footer-link" href="/#portfolio-work">작업물</a>
+                        <a class="footer-link" href="/index2">편집소스</a>
+                        <a class="footer-link" href="/plugin">플러그인 및 스크립트</a>
+                    </nav>
+                    <nav aria-label="SNS 바로가기">
+                        <h3 style="margin:0 0 4px 0;color:#ffffff;font-size:13px;font-weight:800;">SNS</h3>
+                        <a class="footer-link" href="https://www.youtube.com/@%ED%9D%91%EB%A3%A1BLACKDRAGON" target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+                        <a class="footer-link" href="https://x.com/bjblackdragon" target="_blank" rel="noopener noreferrer">X ↗</a>
+                                                                        <a class="footer-link" href="https://www.instagram.com/blackdragon0207/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+                                                                    </nav>
+                    <div>
+                        <h3 style="margin:0 0 4px 0;color:#ffffff;font-size:13px;font-weight:800;">연락처</h3>
+<a class="footer-link" href="mailto:cjstk060207@naver.com">cjstk060207@naver.com</a>
+                        <a class="footer-link" href="https://x.com/bjblackdragon" target="_blank" rel="noopener noreferrer">X · @bjblackdragon ↗</a>
+                    </div>
+                </div>
+            </div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin-top:36px;padding-top:20px;border-top:1px solid #262626;">
+<span style="color:#77727f;font-size:12px;">© 2026 흑룡 BLACKDRAGON</span>
+<a class="footer-link" href="#page-title" style="margin-top:0;">맨 위로 ↑</a>
+</div>
+        </footer>
+    </main>
+
+    <a href="#page-title" aria-label="맨 위로 이동" style="position:fixed;right:20px;bottom:20px;display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:#8b5cf6;color:#ffffff;font-size:20px;font-weight:bold;text-decoration:none;box-shadow:0 8px 22px rgba(139,92,246,0.35);z-index:30;">↑</a>
+
+    <dialog id="purchase-site-dialog" aria-labelledby="purchase-site-title">
+        <div class="purchase-dialog-header">
+            <div>
+                <h2 id="purchase-site-title">구매 사이트 선택</h2>
+                <p id="purchase-site-description">Bulk MOGRT importer를 구매할 사이트를 선택해 주세요.</p>
+            </div>
+            <button class="purchase-dialog-close" type="button" onclick="document.getElementById('purchase-site-dialog').close()" aria-label="닫기">×</button>
+        </div>
+        <div class="purchase-dialog-options">
+            <a id="purchase-bmc-link" href="https://buymeacoffee.com/lkj060207l/e/584268" target="_blank" rel="noopener noreferrer" onclick="document.getElementById('purchase-site-dialog').close()">
+                Buy Me a Coffee
+                <span id="purchase-bmc-label">USD $3 · 구매 페이지로 이동 ↗</span>
+            </a>
+            <a id="purchase-vcraft-link" href="https://vcraft.gg/store/648" target="_blank" rel="noopener noreferrer" onclick="document.getElementById('purchase-site-dialog').close()">
+                Vcraft
+                <span id="purchase-vcraft-label">3,000원 · 구매 페이지로 이동 ↗</span>
+            </a>
+        </div>
+    </dialog><script>
+        function openPurchaseDialog(product) {
+            const lang = window.Lang ? window.Lang.get() : 'ko';
+            const products = {
+                bulkMogrt: {
+                    description: {
+                        ko: 'Bulk MOGRT importer를 구매할 사이트를 선택해 주세요.',
+                        en: 'Choose a store to purchase Bulk MOGRT importer.',
+                        ja: 'Bulk MOGRT importer の購入先を選択してください。'
+                    },
+                    buyMeACoffee: {
+                        url: 'https://buymeacoffee.com/lkj060207l/e/584268',
+                        label: { ko: 'USD $3 · 구매 페이지로 이동 ↗', en: 'USD $3 · Go to purchase ↗', ja: 'USD $3 · 購入ページへ ↗' }
+                    },
+                    vcraft: {
+                        url: 'https://vcraft.gg/store/648',
+                        label: { ko: '3,000원 · 구매 페이지로 이동 ↗', en: '₩3,000 · Go to purchase ↗', ja: '3,000ウォン · 購入ページへ ↗' }
+                    }
+                },
+                simpleGraph: {
+                    description: {
+                        ko: 'Simple Graph를 구매할 사이트를 선택해 주세요.',
+                        en: 'Choose a store to purchase Simple Graph.',
+                        ja: 'Simple Graph の購入先を選択してください。'
+                    },
+                    buyMeACoffee: {
+                        url: 'https://buymeacoffee.com/lkj060207l/e/595633',
+                        label: { ko: 'USD $6 · 구매 페이지로 이동 ↗', en: 'USD $6 · Go to purchase ↗', ja: 'USD $6 · 購入ページへ ↗' }
+                    },
+                    vcraft: {
+                        url: 'https://vcraft.gg/store/688',
+                        label: { ko: '6,000원 · 구매 페이지로 이동 ↗', en: '₩6,000 · Go to purchase ↗', ja: '6,000ウォン · 購入ページへ ↗' }
+                    }
+                }
+            };
+            const selected = products[product];
+            if (!selected) {
+                console.error('Unknown plugin product:', product);
+                return;
+            }
+            document.getElementById('purchase-site-description').textContent = selected.description[lang] || selected.description.ko;
+            document.getElementById('purchase-bmc-link').href = selected.buyMeACoffee.url;
+            document.getElementById('purchase-bmc-label').textContent = selected.buyMeACoffee.label[lang] || selected.buyMeACoffee.label.ko;
+            document.getElementById('purchase-vcraft-link').href = selected.vcraft.url;
+            document.getElementById('purchase-vcraft-label').textContent = selected.vcraft.label[lang] || selected.vcraft.label.ko;
+            document.getElementById('purchase-site-dialog').showModal();
+        }
+    </script>
+
+    <dialog id="lang-dialog" aria-labelledby="lang-dialog-title" style="width:min(320px,calc(100% - 32px));padding:24px;border:1px solid #41315e;border-radius:16px;background:#17151d;color:#e5e5e5;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;">
+            <div>
+                <h2 id="lang-dialog-title" style="margin:0;color:#ffffff;font-size:19px;">Language</h2>
+                <p style="margin:5px 0 0;color:#9ca3af;font-size:13px;">언어 / Language / 言語</p>
+            </div>
+            <button type="button" onclick="document.getElementById('lang-dialog').close()" aria-label="닫기" style="flex:0 0 auto;width:34px;height:34px;border:1px solid #41315e;border-radius:8px;background:#211b30;color:#e5e5e5;font-size:20px;cursor:pointer;">×</button>
+        </div>
+        <div style="display:grid;gap:10px;"><button type="button" data-lang-btn="ko" onclick="window.__langSet&&window.__langSet('ko')" style="display:block;width:100%;padding:14px 16px;border:1px solid #41315e;border-radius:10px;background:#211b30;color:#ffffff;text-align:left;font-size:14px;font-weight:650;font-family:inherit;cursor:pointer;">한국어</button><button type="button" data-lang-btn="en" onclick="window.__langSet&&window.__langSet('en')" style="display:block;width:100%;padding:14px 16px;border:1px solid #41315e;border-radius:10px;background:#211b30;color:#ffffff;text-align:left;font-size:14px;font-weight:650;font-family:inherit;cursor:pointer;">English</button><button type="button" data-lang-btn="ja" onclick="window.__langSet&&window.__langSet('ja')" style="display:block;width:100%;padding:14px 16px;border:1px solid #41315e;border-radius:10px;background:#211b30;color:#ffffff;text-align:left;font-size:14px;font-weight:650;font-family:inherit;cursor:pointer;">日本語</button></div>
+    </dialog>
+<!-- 언어 전환 (즉시 번역) -->
+<script>(function(){var q=[],loading=false,auto=false;function base(){if(location.protocol==="file:"){return new URL("../public/",location.href).href;}return "/js/";}function apply(){var a=q;q=[];for(var i=0;i<a.length;i++){var L=a[i];if(!window.Lang)continue;window.Lang.set(L,true);try{document.documentElement.setAttribute("lang",L)}catch(e){}var d=document.getElementById("lang-dialog");if(d&&d.open)d.close()}}function boot(cb){if(window.Lang){if(cb)cb();return}if(loading){if(cb)setTimeout(function(){boot(cb)},120);return}loading=true;var B=base();var s=document.createElement("script");s.src=B+"i18n-data.js?r="+Date.now();s.onload=function(){var t=document.createElement("script");t.src=B+"lang.js?r="+Date.now();t.onload=function(){loading=false;apply();if(cb)cb()};t.onerror=function(){loading=false};document.body.appendChild(t)};s.onerror=function(){loading=false};document.body.appendChild(s)}window.__langSet=function(L){if(window.Lang){window.Lang.set(L,true);try{document.documentElement.setAttribute("lang",L)}catch(e){}var d=document.getElementById("lang-dialog");if(d&&d.open)d.close();return}q.push(L);boot()};window.__langBoot=boot;window.addEventListener("load",function(){if(!window.Lang&&!auto){auto=true;boot()}});if(document.readyState==="complete"&&!window.Lang){auto=true;boot()}})();</script><script src="/js/i18n-data.js"></script>
+<script src="/js/lang.js"></script><script>
+(function(){
+  var KEY='pf-theme';
+  function getSaved(){ try{return localStorage.getItem(KEY);}catch(e){return null;} }
+  function apply(t){
+    if(t==='light'){ document.body.setAttribute('data-theme','light'); } else { document.body.removeAttribute('data-theme'); }
+    var b=document.getElementById('theme-toggle'); if(b) b.setAttribute('aria-pressed', t==='light'?'true':'false');
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    apply(getSaved()||'dark');
+    var nav=document.querySelector('.site-nav');
+    if(nav && !document.getElementById('theme-toggle')){
+      var langBtn=nav.querySelector('button[aria-controls="lang-dialog"]');
+      var tb=document.createElement('button');
+      tb.type='button'; tb.id='theme-toggle'; tb.className='theme-toggle-btn';
+      tb.setAttribute('aria-label','테마 전환'); tb.title='화이트/블랙 테마 전환';
+      var sun=document.createElement('span'); sun.className='theme-icon theme-icon-sun'; sun.textContent='☀';
+      var moon=document.createElement('span'); moon.className='theme-icon theme-icon-moon'; moon.textContent='☾';
+      var knob=document.createElement('span'); knob.className='theme-knob';
+      tb.appendChild(sun); tb.appendChild(moon); tb.appendChild(knob);
+      tb.addEventListener('click', function(){
+        var cur=document.body.getAttribute('data-theme')==='light'?'light':'dark';
+        var nxt=cur==='light'?'dark':'light';
+        try{localStorage.setItem(KEY,nxt);}catch(e){}
+        apply(nxt);
+      });
+      if(langBtn&&langBtn.parentNode===nav) nav.insertBefore(tb,langBtn); else nav.appendChild(tb);
+    }
+  });
+})();
+</script>
+</body>
+</html>
